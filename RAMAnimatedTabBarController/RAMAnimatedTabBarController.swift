@@ -301,18 +301,42 @@ open class RAMAnimatedTabBarController: UITabBarController {
       textLabel.translatesAutoresizingMaskIntoConstraints = false
       
       container.backgroundColor = (items as [RAMAnimatedTabBarItem])[index].bgDefaultColor
-      
-      container.addSubview(icon)
-      createConstraints(icon, container: container, size: itemImage.size, yOffset: -5 - item.yOffSet)
+
+        
+        if index+1 == Int(round(Double(items.count)/2.0)) {
+            
+            let halfSize:CGFloat = (min( itemImage.size.width/2, itemImage.size.height/2)) * 1.3
+            let backSize = itemImage.size.width * 1.3;
+            
+            let backView = UIView(frame: CGRect(x: 0, y: 0, width: backSize, height: backSize))
+            backView.translatesAutoresizingMaskIntoConstraints = false
+            backView.backgroundColor = #colorLiteral(red: 0.2588235294, green: 0.5568627451, blue: 0.8, alpha: 1)
+            backView.layer.cornerRadius = halfSize
+            
+            
+            container.addSubview(backView)
+            
+            createConstraints(backView, container: container, size: CGSize(width: backSize, height: backSize), yOffset: (-5 - item.yOffSet))
+            
+            container.addSubview(icon)
+            createConstraints(icon, container: container, size: itemImage.size, yOffset: -8 - item.yOffSet)
+        } else {
+            container.addSubview(icon)
+            createConstraints(icon, container: container, size: itemImage.size, yOffset: -5 - item.yOffSet)
+        }
+
       
       container.addSubview(textLabel)
       let textLabelWidth = tabBar.frame.size.width / CGFloat(items.count) - 5.0
       createConstraints(textLabel, container: container, size: CGSize(width: textLabelWidth , height: 10), yOffset: 16 - item.yOffSet)
       
+        
       if item.isEnabled == false {
         icon.alpha      = 0.5
         textLabel.alpha = 0.5
       }
+        
+    
       item.iconView = (icon:icon, textLabel:textLabel)
       
       if 0 == index { // selected first elemet
@@ -391,6 +415,7 @@ open class RAMAnimatedTabBarController: UITabBarController {
     
     return containersDict as NSDictionary
   }
+    
   
   fileprivate func createViewContainer() -> UIView {
     let viewContainer = UIView();
