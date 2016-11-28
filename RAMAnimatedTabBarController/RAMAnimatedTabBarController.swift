@@ -264,6 +264,28 @@ open class RAMAnimatedTabBarController: UITabBarController {
   }
   
   // MARK: create methods
+    var isCheckmark: Bool = false
+    
+    public func switchCenterTabItemIconToCheckmark() {
+        let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
+        
+            //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
+        let checkImage = #imageLiteral(resourceName: "IconCheckmark").withRenderingMode(.alwaysOriginal)
+        tabItem.image = checkImage
+        tabItem.iconView?.icon.image = tabItem.image
+        viewControllers?[1].tabBarItem = tabItem
+        isCheckmark = true
+    }
+    
+    public func switchCenterTabItemIconToPlus() {
+        let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
+        //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
+        let checkImage = #imageLiteral(resourceName: "IconAdd").withRenderingMode(.alwaysOriginal)
+        tabItem.image = checkImage
+        tabItem.iconView?.icon.image = tabItem.image
+        viewControllers?[1].tabBarItem = tabItem
+        isCheckmark = false
+    }
   
   fileprivate func createCustomIcons(_ containers : NSDictionary) {
     
@@ -462,16 +484,34 @@ open class RAMAnimatedTabBarController: UITabBarController {
     
     let currentIndex = gestureView.tag
     
+    if ((currentIndex == 1) && isCheckmark) {
+        if let navVC = self.viewControllers![0] as? UINavigationController {
+            let alert = UIAlertController(title: "Принять", message: nil, preferredStyle: .alert)
+            let yesAction = UIAlertAction(title: "Да", style: .default, handler: { (action: UIAlertAction) in
+                navVC.popViewController(animated: true)
+            })
+            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
+            alert.addAction(yesAction)
+            alert.addAction(cancelAction)
+            navVC.topViewController?.present(alert, animated: true, completion: nil)
+            return
+        }
+    }
+
+    
     if items[currentIndex].isEnabled == false { return }
     
     let controller = self.childViewControllers[currentIndex]
     
     if let shouldSelect = delegate?.tabBarController?(self, shouldSelect: controller)
       , !shouldSelect {
+        
       return
     }
     
+    
     if selectedIndex != currentIndex {
+        
       let animationItem : RAMAnimatedTabBarItem = items[currentIndex]
       animationItem.playAnimation()
       
