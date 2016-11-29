@@ -485,7 +485,7 @@ open class RAMAnimatedTabBarController: UITabBarController {
     let currentIndex = gestureView.tag
     
     if ((currentIndex == 1) && isCheckmark) {
-        if let navVC = self.viewControllers![0] as? UINavigationController {
+        if let navVC = self.viewControllers![self.selectedIndex] as? UINavigationController {
             let alert = UIAlertController(title: "Принять", message: nil, preferredStyle: .alert)
             let yesAction = UIAlertAction(title: "Да", style: .default, handler: { (action: UIAlertAction) in
                 navVC.popViewController(animated: true)
