@@ -265,8 +265,10 @@ open class RAMAnimatedTabBarController: UITabBarController {
   
   // MARK: create methods
     var isCheckmark: Bool = false
+    var centerButtonCallback: (() -> Void)?
     
-    public func switchCenterTabItemIconToCheckmark() {
+    public func switchCenterTabItemIconToCheckmarkWithAction(callback: @escaping () -> Void) {
+        centerButtonCallback = callback
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
         
             //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
@@ -474,6 +476,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
   }
   
   // MARK: actions
+    
+    func callback() {}
   
   open func tapHandler(_ gesture:UIGestureRecognizer) {
     
@@ -485,17 +489,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
     let currentIndex = gestureView.tag
     
     if ((currentIndex == 1) && isCheckmark) {
-        if let navVC = self.viewControllers![self.selectedIndex] as? UINavigationController {
-            let alert = UIAlertController(title: "Принять", message: nil, preferredStyle: .alert)
-            let yesAction = UIAlertAction(title: "Да", style: .default, handler: { (action: UIAlertAction) in
-                navVC.popViewController(animated: true)
-            })
-            let cancelAction = UIAlertAction(title: "Отмена", style: .cancel, handler: nil)
-            alert.addAction(yesAction)
-            alert.addAction(cancelAction)
-            navVC.topViewController?.present(alert, animated: true, completion: nil)
-            return
-        }
+        centerButtonCallback?()
+        return
     }
 
     
