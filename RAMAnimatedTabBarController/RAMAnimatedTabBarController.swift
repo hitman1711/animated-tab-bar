@@ -326,24 +326,27 @@ open class RAMAnimatedTabBarController: UITabBarController {
       
       container.backgroundColor = (items as [RAMAnimatedTabBarItem])[index].bgDefaultColor
 
-        
+        // Если средняя кнопка
         if index+1 == Int(round(Double(items.count)/2.0)) {
             
-            let halfSize:CGFloat = (min( itemImage.size.width/2, itemImage.size.height/2)) * 1.3
-            let backSize = itemImage.size.width * 1.3;
+            let halfSize:CGFloat = (min( itemImage.size.width/2, itemImage.size.height/2)) * 1.2
+            let backSize = itemImage.size.width * 1.2;
             
             let backView = UIView(frame: CGRect(x: 0, y: 0, width: backSize, height: backSize))
             backView.translatesAutoresizingMaskIntoConstraints = false
             backView.backgroundColor = #colorLiteral(red: 0.2588235294, green: 0.5568627451, blue: 0.8, alpha: 1)
             backView.layer.cornerRadius = halfSize
-            
+            backView.layer.shadowColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1).cgColor
+            backView.layer.shadowOpacity = 0.35
+            backView.layer.shadowRadius = 1.5
+            backView.layer.shadowOffset = CGSize(width: 0, height: -2.5)
             
             container.addSubview(backView)
             
             createConstraints(backView, container: container, size: CGSize(width: backSize, height: backSize), yOffset: (-5 - item.yOffSet))
             
             container.addSubview(icon)
-            createConstraints(icon, container: container, size: itemImage.size, yOffset: -8 - item.yOffSet)
+            createConstraints(icon, container: container, size: itemImage.size, yOffset: -5 - item.yOffSet)
         } else {
             container.addSubview(icon)
             createConstraints(icon, container: container, size: itemImage.size, yOffset: -5 - item.yOffSet)
