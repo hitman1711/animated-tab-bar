@@ -75,6 +75,8 @@ open class RAMAnimatedTabBarItem: UITabBarItem {
   /// The tint color of the UITabBarItem icon.
   @IBInspectable open var iconColor: UIColor = UIColor.clear // if alpha color is 0 color ignoring
   
+  @IBInspectable open var iconBackgroundColor: UIColor?
+    
   var bgDefaultColor: UIColor = UIColor.clear // background color
   var bgSelectedColor: UIColor = UIColor.clear
   
@@ -334,7 +336,12 @@ open class RAMAnimatedTabBarController: UITabBarController {
             
             let backView = UIView(frame: CGRect(x: 0, y: 0, width: backSize, height: backSize))
             backView.translatesAutoresizingMaskIntoConstraints = false
-            backView.backgroundColor = #colorLiteral(red: 0.2588235294, green: 0.5568627451, blue: 0.8, alpha: 1)
+            if let backColor = (items as [RAMAnimatedTabBarItem])[index].iconBackgroundColor {
+                backView.backgroundColor = backColor
+            } else {
+                backView.backgroundColor = #colorLiteral(red: 0.2588235294, green: 0.5568627451, blue: 0.8, alpha: 1)
+            }
+            
             backView.layer.cornerRadius = halfSize
             backView.layer.shadowColor = #colorLiteral(red: 0.1215686277, green: 0.01176470611, blue: 0.4235294163, alpha: 1).cgColor
             backView.layer.shadowOpacity = 0.35
