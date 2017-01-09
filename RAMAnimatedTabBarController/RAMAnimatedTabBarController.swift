@@ -25,6 +25,12 @@ import UIKit
 
 // MARK: Custom Badge
 
+public enum CenterButtonType: String {
+    case checkmark = "IconCheckmark"
+    case plus = "IconAdd"
+    case profile = "IconUserWhite"
+}
+
 extension RAMAnimatedTabBarItem {
   
   /// The current badge value
@@ -269,27 +275,28 @@ open class RAMAnimatedTabBarController: UITabBarController {
     var isCheckmark: Bool = false
     var centerButtonCallback: (() -> Void)?
     
-    public func switchCenterTabItemIconToCheckmarkWithAction(callback: @escaping () -> Void) {
-        centerButtonCallback = callback
+    public func switchCenterTabItemIcon(type:CenterButtonType, action: @escaping () -> Void) {
+        centerButtonCallback = action
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
         
-            //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
-        let checkImage = #imageLiteral(resourceName: "IconCheckmark").withRenderingMode(.alwaysOriginal)
-        tabItem.image = checkImage
+        let image = UIImage(named: type.rawValue)?.withRenderingMode(.alwaysOriginal)
+        tabItem.image = image
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
         isCheckmark = true
     }
+
     
-    public func switchCenterTabItemIconToPlus() {
+    public func switchCenterButtonBackTo(type: CenterButtonType) {
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
         //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
-        let checkImage = #imageLiteral(resourceName: "IconAdd").withRenderingMode(.alwaysOriginal)
-        tabItem.image = checkImage
+        let image = UIImage(named: type.rawValue)?.withRenderingMode(.alwaysOriginal)
+        tabItem.image = image
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
         isCheckmark = false
     }
+
   
   fileprivate func createCustomIcons(_ containers : NSDictionary) {
     
