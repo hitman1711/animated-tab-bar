@@ -200,6 +200,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
   fileprivate var didInit: Bool = false
   fileprivate var didLoadView: Bool = false
   
+  public var isForBusinessApp: Bool = false
+    
   // MARK: life circle
   
   /**
@@ -275,11 +277,11 @@ open class RAMAnimatedTabBarController: UITabBarController {
     var isCheckmark: Bool = false
     var centerButtonCallback: (() -> Void)?
     
-    public func switchCenterTabItemIcon(type:CenterButtonType, action: @escaping () -> Void) {
+    
+    public func switchCenterTabItemIcon(theType:CenterButtonType, action: @escaping () -> Void) {
         centerButtonCallback = action
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
-        
-        let image = UIImage(named: type.rawValue)?.withRenderingMode(.alwaysOriginal)
+        let image = UIImage(named: theType.rawValue)?.withRenderingMode(.alwaysOriginal)
         tabItem.image = image
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
@@ -287,10 +289,10 @@ open class RAMAnimatedTabBarController: UITabBarController {
     }
 
     
-    public func switchCenterButtonBackTo(type: CenterButtonType) {
+    public func switchCenterButtonBackTo(theType: CenterButtonType) {
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
         //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
-        let image = UIImage(named: type.rawValue)?.withRenderingMode(.alwaysOriginal)
+        let image = UIImage(named: theType.rawValue)?.withRenderingMode(.alwaysOriginal)
         tabItem.image = image
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
@@ -508,6 +510,10 @@ open class RAMAnimatedTabBarController: UITabBarController {
     if ((currentIndex == 1) && isCheckmark) {
         centerButtonCallback?()
         return
+    }
+    else if isCheckmark {
+        var tempType: CenterButtonType = isForBusinessApp ? .profile : .plus
+        self.switchCenterButtonBackTo(theType: tempType)
     }
 
     
