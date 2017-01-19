@@ -29,6 +29,16 @@ public enum CenterButtonType: String {
     case checkmark = "IconCheckmark"
     case plus = "IconAdd"
     case profile = "IconUserWhite"
+    
+    public var selected: String {
+        switch self {
+        case .checkmark:      return "IconHomeSelectedBusiness"
+        case .plus:           return "IconUserSelectedWhite"
+        case .profile:        return "IconTabBarHistSelected"
+        default: break
+        }
+    }
+ 
 }
 
 extension RAMAnimatedTabBarItem {
@@ -285,6 +295,8 @@ open class RAMAnimatedTabBarController: UITabBarController {
         tabItem.image = image
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
+//        viewControllers![1].tabBarItem.image = image
+        
         isCheckmark = true
     }
 
@@ -293,9 +305,14 @@ open class RAMAnimatedTabBarController: UITabBarController {
         let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
         //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
         let image = UIImage(named: theType.rawValue)?.withRenderingMode(.alwaysOriginal)
+        let selectedImage = UIImage(named: theType.selected)?.withRenderingMode(.alwaysOriginal)
         tabItem.image = image
+        tabItem.selectedImage = selectedImage
         tabItem.iconView?.icon.image = tabItem.image
         viewControllers?[1].tabBarItem = tabItem
+//        tabBar.items![1] = tabItem
+//        viewControllers![1].tabBarItem.image = image
+//        viewControllers![1].tabBarItem.selectedImage = selectedImage
         isCheckmark = false
     }
 
