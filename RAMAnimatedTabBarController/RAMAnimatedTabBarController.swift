@@ -29,12 +29,14 @@ public enum CenterButtonType: String {
     case checkmark = "IconCheckmark"
     case plus = "IconAdd"
     case profile = "IconUserWhite"
+    case save = "IconSave"
     
     public var selected: String {
         switch self {
         case .checkmark:      return "IconHomeSelectedBusiness"
         case .plus:           return "IconUserSelectedWhite"
         case .profile:        return "IconTabBarHistSelected"
+        case .save:           return "IconSave"
         default: break
         }
     }
