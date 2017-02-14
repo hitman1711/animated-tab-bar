@@ -25,44 +25,44 @@ import QuartzCore
 
 /// The RAMFrameItemAnimation class provides keyframe animation.
 open class RAMFrameItemAnimation: RAMItemAnimation {
-  
-  @nonobjc fileprivate var animationImages : Array<CGImage> = Array()
-  
-  var selectedImage : UIImage!
-  
+
+  @nonobjc fileprivate var animationImages: Array<CGImage> = Array()
+
+  var selectedImage: UIImage!
+
   /// A Boolean value indicated plaing revers animation when UITabBarItem unselected, if false image change immediately, defalut value true
   @IBInspectable open var isDeselectAnimation: Bool = true
-  
+
   /// path to array of image names from plist file
   @IBInspectable open var imagesPath: String!
-  
+
   override open func awakeFromNib() {
-    
+
     guard let path = Bundle.main.path(forResource: imagesPath, ofType:"plist") else {
       fatalError("don't found plist")
     }
-    
+
     guard case let animationImagesName as [String] = NSArray(contentsOfFile: path) else {
       fatalError()
     }
-    
+
     createImagesArray(animationImagesName)
-    
+
     // selected image
     let selectedImageName = animationImagesName[animationImagesName.endIndex - 1]
     selectedImage = UIImage(named: selectedImageName)
   }
-  
-  func createImagesArray(_ imageNames : Array<String>) {
-    for name : String in imageNames {
+
+  func createImagesArray(_ imageNames: Array<String>) {
+    for name: String in imageNames {
       if let image = UIImage(named: name)?.cgImage {
         animationImages.append(image)
       }
     }
   }
-  
+
   // MARK: public
-  
+
   /**
    Set images for keyframe animation
    
@@ -77,21 +77,21 @@ open class RAMFrameItemAnimation: RAMItemAnimation {
     }
     self.animationImages = animationImages
   }
-  
+
   // MARK: RAMItemAnimationProtocol
-  
+
   /**
    Start animation, method call when UITabBarItem is selected
    
    - parameter icon:      animating UITabBarItem icon
    - parameter textLabel: animating UITabBarItem textLabel
    */
-  override open func playAnimation(_ icon : UIImageView, textLabel : UILabel) {
-    
+  override open func playAnimation(_ icon: UIImageView, textLabel: UILabel) {
+
     playFrameAnimation(icon, images:animationImages)
     textLabel.textColor = textSelectedColor
   }
-  
+
   /**
    Start animation, method call when UITabBarItem is unselected
    
@@ -100,26 +100,26 @@ open class RAMFrameItemAnimation: RAMItemAnimation {
    - parameter defaultTextColor: default UITabBarItem text color
    - parameter defaultIconColor: default UITabBarItem icon color
    */
-  override open func deselectAnimation(_ icon : UIImageView, textLabel : UILabel, defaultTextColor : UIColor, defaultIconColor : UIColor) {
+  override open func deselectAnimation(_ icon: UIImageView, textLabel: UILabel, defaultTextColor: UIColor, defaultIconColor: UIColor) {
     if isDeselectAnimation {
       playFrameAnimation(icon, images:animationImages.reversed())
     }
-    
+
     textLabel.textColor = defaultTextColor
   }
-  
+
   /**
    Method call when TabBarController did load
    
    - parameter icon:      animating UITabBarItem icon
    - parameter textLabel: animating UITabBarItem textLabel
    */
-  override open func selectedState(_ icon : UIImageView, textLabel : UILabel) {
+  override open func selectedState(_ icon: UIImageView, textLabel: UILabel) {
     icon.image = selectedImage
     textLabel.textColor = textSelectedColor
   }
-  
-  @nonobjc func playFrameAnimation(_ icon : UIImageView, images : Array<CGImage>) {
+
+  @nonobjc func playFrameAnimation(_ icon: UIImageView, images: Array<CGImage>) {
     let frameAnimation = CAKeyframeAnimation(keyPath: Constants.AnimationKeys.KeyFrame)
     frameAnimation.calculationMode = kCAAnimationDiscrete
     frameAnimation.duration = TimeInterval(duration)

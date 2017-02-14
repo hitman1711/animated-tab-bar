@@ -9,7 +9,7 @@
 import UIKit
 
 class ViewController: UIViewController {
-    
+
     var index: NSInteger = 0
 
     override func viewDidLoad() {
@@ -23,12 +23,12 @@ class ViewController: UIViewController {
     }
 
     // PRAGMA: actions
-    
+
     @IBAction func showBadgeHandelr(_ sender: AnyObject) {
         index += 1
         self.tabBarItem.badgeValue = "\(index)"
     }
-  
+
     @IBAction func hideBadgeHandler(_ sender: AnyObject) {
         self.tabBarItem.badgeValue = nil
     }
