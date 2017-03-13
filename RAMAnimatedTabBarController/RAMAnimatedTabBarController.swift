@@ -32,9 +32,9 @@ public enum CenterButtonType: String {
 
     public var selected: String {
         switch self {
-        case .checkmark:      return "IconHomeSelectedBusiness"
-        case .plus:           return "IconUserSelectedWhite"
-        case .profile:        return "IconTabBarHistSelected"
+        case .checkmark:      return "IconCheckmark"
+        case .plus:           return "IconAdd"
+        case .profile:        return "IconUserSelectedWhite"
         case .save:           return "IconSave"
         default: break
         }
@@ -285,35 +285,42 @@ open class RAMAnimatedTabBarController: UITabBarController {
   }
 
   // MARK: create methods
-    var isCheckmark: Bool = false
+    
     var centerButtonCallback: (() -> Void)?
-
-    public func switchCenterTabItemIcon(theType: CenterButtonType, action: @escaping () -> Void) {
-        centerButtonCallback = action
-        let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
-        let image = UIImage(named: theType.rawValue)?.withRenderingMode(.alwaysOriginal)
-        tabItem.image = image
-        tabItem.iconView?.icon.image = tabItem.image
-        viewControllers?[1].tabBarItem = tabItem
-//        viewControllers![1].tabBarItem.image = image
-
-        isCheckmark = true
+    
+    private var currentCenterButton: CenterButtonType? {
+        didSet {
+            guard let centerType = currentCenterButton,
+                  let tabItem = tabBar.items?[1] as? RAMAnimatedTabBarItem  else {  return  }
+            let image = UIImage(named: centerType.rawValue)?.withRenderingMode(.alwaysOriginal)
+            let selectedImage = UIImage(named: centerType.selected)?.withRenderingMode(.alwaysOriginal)
+            tabItem.image = image
+            tabItem.selectedImage = selectedImage
+            tabItem.iconView?.icon.image = tabItem.image
+            viewControllers?[1].tabBarItem = tabItem
+        }
+    }
+    
+    var isCustomCenterButton: Bool {
+        var result = false
+        if let centerType = currentCenterButton, centerType == .checkmark || centerType == .save {
+            result = true
+        }
+        return result
+    }
+    
+    public func setCenterButton(type: CenterButtonType, action: (() -> Void)? = nil) {
+        if let current = currentCenterButton, current == type {
+            return
+        }
+        currentCenterButton = type
+        if action != nil {
+            centerButtonCallback = action
+        } else {
+            centerButtonCallback = nil
+        }
     }
 
-    public func switchCenterButtonBackTo(theType: CenterButtonType) {
-        let tabItem: RAMAnimatedTabBarItem = tabBar.items![1] as! RAMAnimatedTabBarItem
-        //(tabItem.iconColor.cgColor.alpha == 0) ? .alwaysOriginal : .alwaysTemplate
-        let image = UIImage(named: theType.rawValue)?.withRenderingMode(.alwaysOriginal)
-        let selectedImage = UIImage(named: theType.selected)?.withRenderingMode(.alwaysOriginal)
-        tabItem.image = image
-        tabItem.selectedImage = selectedImage
-        tabItem.iconView?.icon.image = tabItem.image
-        viewControllers?[1].tabBarItem = tabItem
-//        tabBar.items![1] = tabItem
-//        viewControllers![1].tabBarItem.image = image
-//        viewControllers![1].tabBarItem.selectedImage = selectedImage
-        isCheckmark = false
-    }
 
   fileprivate func createCustomIcons(_ containers: NSDictionary) {
 
@@ -517,12 +524,12 @@ open class RAMAnimatedTabBarController: UITabBarController {
 
     let currentIndex = gestureView.tag
 
-    if ((currentIndex == 1) && isCheckmark) {
+    if ((currentIndex == 1) && isCustomCenterButton) {
         centerButtonCallback?()
         return
-    } else if isCheckmark {
+    } else if isCustomCenterButton {
         var tempType: CenterButtonType = isForBusinessApp ? .profile : .plus
-        self.switchCenterButtonBackTo(theType: tempType)
+        self.setCenterButton(type: tempType)
     }
 
     if items[currentIndex].isEnabled == false { return }
