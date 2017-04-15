@@ -211,7 +211,14 @@ open class RAMAnimatedTabBarController: UITabBarController {
   fileprivate var didInit: Bool = false
   fileprivate var didLoadView: Bool = false
 
-  public var isForBusinessApp: Bool = false
+    public var isForBusinessApp: Bool = false {
+        didSet {
+            if let line = blackLine {
+                line.isHidden = !isForBusinessApp
+            }
+        }
+    }
+  var blackLine: UIView?
 
   // MARK: life circle
 
@@ -268,10 +275,20 @@ open class RAMAnimatedTabBarController: UITabBarController {
 
   override open func viewDidLoad() {
     super.viewDidLoad()
-
+    
+    blackLine = UIView()
+    blackLine!.backgroundColor = UIColor(white: 0, alpha: 0.7)
+    tabBar.addSubview(blackLine!)
+    
+    blackLine!.heightAnchor.constraint(equalToConstant: 1).isActive = true
+    blackLine!.topAnchor.constraint(equalTo: tabBar.topAnchor).isActive = true
+    blackLine!.leadingAnchor.constraint(equalTo: tabBar.leadingAnchor).isActive = true
+    blackLine!.trailingAnchor.constraint(equalTo: tabBar.trailingAnchor).isActive = true
+    
     self.didLoadView = true
 
     self.initializeContainers()
+    
   }
 
   fileprivate func initializeContainers() {
