@@ -36,7 +36,7 @@ public enum CenterButtonType: String {
         case .plus:           return "IconAdd"
         case .profile:        return "IconUserSelectedWhite"
         case .save:           return "IconSave"
-        default: break
+//        default: break
         }
     }
 
@@ -545,7 +545,7 @@ open class RAMAnimatedTabBarController: UITabBarController {
         centerButtonCallback?()
         return
     } else if isCustomCenterButton {
-        var tempType: CenterButtonType = isForBusinessApp ? .profile : .plus
+        let tempType: CenterButtonType = isForBusinessApp ? .profile : .plus
         self.setCenterButton(type: tempType)
     }
 
